@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Portal - Login/Register</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .back-btn {
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            transition: transform 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-5px);
+        }
+
+        .auth-container {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            transform-origin: center;
+            animation: containerAppear 0.6s ease-out;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-header h2 {
+            color: #fff;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .auth-header p {
+            color: #94a3b8;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: none;
+            font-size: 16px;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: #60a5fa;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #60a5fa;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #60a5fa;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.03);
+            color: #fff;
+        }
+
+        .form-group input:focus {
+            border-color: #60a5fa;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #94a3b8;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: rgba(96, 165, 250, 0.1);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            border-radius: 10px;
+            color: #60a5fa;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: rgba(96, 165, 250, 0.2);
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Animated Background Shapes */
+        .animated-bg {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 50%;
+            animation: floatAnimation 15s infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            bottom: -100px;
+            left: -50px;
+            animation-delay: 2s;
+        }
+
+        .shape:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            bottom: 50%;
+            right: 10%;
+            animation-delay: 4s;
+        }
+
+        @keyframes floatAnimation {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+            100% {
+                transform: translateY(0) rotate(360deg);
+            }
+        }
+
+        /* Form Animation */
+        @keyframes slideIn {
+            0% {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Tab Button Animation */
+        .tab-btn::after {
+            transition: all 0.3s ease-out;
+        }
+
+        .tab-btn:hover {
+            color: #60a5fa;
+            transform: translateY(-2px);
+        }
+
+        @keyframes containerAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .forgot-password a, .back-to-login a {
+            color: #60a5fa;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .forgot-password a:hover, .back-to-login a:hover {
+            color: #818cf8;
+            text-decoration: underline;
+        }
+
+        .back-to-login {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Animation for form switching */
+        .auth-form {
+            display: none;
+            opacity: 0;
+            transform: translateX(30px);
+        }
+
+        .auth-form.active {
+            display: block;
+            opacity: 1;
+            transform: translateX(0);
+            animation: slideIn 0.5s ease-out forwards;
+        }
+
+        /* Success Message Styles */
+        .success-message {
+            background: rgba(49, 196, 141, 0.1);
+            border: 1px solid #31c48d;
+            color: #31c48d;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .error-message {
+            background: rgba(224, 36, 36, 0.1);
+            border: 1px solid #e02424;
+            color: #e02424;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Add these styles to your existing CSS */
+        .password-toggle {
+            color: #94a3b8;
+            transition: color 0.3s ease;
+        }
+        
+        .password-toggle:hover {
+            color: #60a5fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    <div class="container">
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        <div class="auth-container">
+            <div class="auth-header">
+                <h2>School Portal</h2>
+                <p>Access your school management dashboard</p>
+            </div>
+            
+            <div class="auth-tabs">
+                <button class="tab-btn active" data-tab="login">Login</button>
+                <button class="tab-btn" data-tab="register">Register</button>
+            </div>
+
+            <div class="auth-form login-form active">
+                <form id="schoolLoginForm">
+                    <div class="form-group">
+                        <i class="fas fa-school"></i>
+                        <input type="text" placeholder="School ID" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" placeholder="Password" required>
+                        <i class="fas fa-eye password-toggle" style="left: auto; right: 15px; cursor: pointer;"></i>
+                    </div>
+                    <div class="forgot-password">
+                        <a href="#" id="forgotPasswordLink">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="submit-btn">Login</button>
+                </form>
+            </div>
+
+            <div class="auth-form register-form">
+                <form id="schoolRegisterForm">
+                    <div class="form-group">
+                        <i class="fas fa-school"></i>
+                        <input type="text" placeholder="School Name" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" placeholder="Phone Number" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <input type="text" placeholder="School Address" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" placeholder="Create Password" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" placeholder="Confirm Password" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Register School</button>
+                </form>
+            </div>
+
+            <div class="auth-form forgot-form">
+                <form id="forgotPasswordForm">
+                    <div class="form-group">
+                        <i class="fas fa-school"></i>
+                        <input type="text" placeholder="School ID" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" placeholder="Registered Email" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Reset Password</button>
+                    <div class="back-to-login">
+                        <a href="#" id="backToLoginLink">Back to Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Default school credentials for testing
+            const defaultSchool = {
+                id: 'school123',
+                password: 'School@123'
+            };
+
+            // Tab switching functionality
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const forms = document.querySelectorAll('.auth-form');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    forms.forEach(f => f.classList.remove('active'));
+                    btn.classList.add('active');
+                    const formType = btn.getAttribute('data-tab');
+                    document.querySelector(`.${formType}-form`).classList.add('active');
+                });
+            });
+
+            // School Login Form
+            const loginForm = document.getElementById('schoolLoginForm');
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const schoolId = loginForm.querySelector('input[type="text"]').value;
+                const password = loginForm.querySelector('input[type="password"]').value;
+
+                if (schoolId === defaultSchool.id && password === defaultSchool.password) {
+                    alert('Login successful! Redirecting to school dashboard...');
+                    // Add redirect to school dashboard here
+                    window.location.href = 'school/school-dashboard.html';
+            
+                } else {
+                    alert('Invalid credentials. Please try again.');
+                }
+            });
+
+            // School Registration Form
+            const registerForm = document.getElementById('schoolRegisterForm');
+            registerForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const password = registerForm.querySelectorAll('input[type="password"]')[0].value;
+                const confirmPassword = registerForm.querySelectorAll('input[type="password"]')[1].value;
+
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match!');
+                    return;
+                }
+
+                alert('Registration successful! Please login with your credentials.');
+                document.querySelector('[data-tab="login"]').click();
+                registerForm.reset();
+            });
+
+            // Forgot Password Functionality
+            const forgotForm = document.querySelector('.forgot-form');
+            const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+            const backToLoginLink = document.getElementById('backToLoginLink');
+
+            // Show Forgot Password Form
+            forgotPasswordLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                loginForm.classList.remove('active');
+                forgotForm.classList.add('active');
+                // Reset any existing messages
+                document.querySelectorAll('.success-message, .error-message').forEach(msg => {
+                    msg.style.display = 'none';
+                });
+            });
+
+            // Back to Login
+            backToLoginLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                forgotForm.classList.remove('active');
+                loginForm.classList.add('active');
+            });
+
+            // Handle Forgot Password Form Submission
+            const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+            forgotPasswordForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const schoolId = forgotPasswordForm.querySelector('input[type="text"]').value;
+                const email = forgotPasswordForm.querySelector('input[type="email"]').value;
+
+                // Remove any existing messages
+                document.querySelectorAll('.success-message, .error-message').forEach(msg => {
+                    msg.remove();
+                });
+
+                // Create success message
+                const successMessage = document.createElement('div');
+                successMessage.className = 'success-message';
+                successMessage.innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    Password reset instructions have been sent to ${email}
+                `;
+
+                // Insert message before the form
+                forgotPasswordForm.insertBefore(successMessage, forgotPasswordForm.firstChild);
+
+                // Reset form
+                forgotPasswordForm.reset();
+
+                // Automatically return to login after 3 seconds
+                setTimeout(() => {
+                    forgotForm.classList.remove('active');
+                    loginForm.classList.add('active');
+                }, 3000);
+            });
+
+            // Add form transitions
+            document.querySelectorAll('.auth-form').forEach(form => {
+                form.addEventListener('transitionend', () => {
+                    if (!form.classList.contains('active')) {
+                        form.style.display = 'none';
+                    }
+                });
+            });
+
+            // Add this to your existing DOMContentLoaded event listener
+            document.querySelectorAll('.password-toggle').forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    const input = e.target.previousElementSibling;
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        e.target.classList.remove('fa-eye');
+                        e.target.classList.add('fa-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        e.target.classList.remove('fa-eye-slash');
+                        e.target.classList.add('fa-eye');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
