@@ -38,10 +38,10 @@ A modern and user-friendly web application designed to streamline school operati
 ![Admin Panel](https://github.com/hetpatel1812/school-monitoring-system/blob/main/school%20monitoring/images/admin-panel.png.png)
 
 ### 🏫 School Panel
-![School Panel](images/school-panel.png)
+![School Panel](https://github.com/hetpatel1812/school-monitoring-system/blob/main/school%20monitoring/images/school-panel.png.png)
 
 ### 📘 School Profile
-![School Profile](images/school-profile.png)
+![School Profile](https://github.com/hetpatel1812/school-monitoring-system/blob/main/school%20monitoring/images/school-profile.png.png)
 
 
 ---
