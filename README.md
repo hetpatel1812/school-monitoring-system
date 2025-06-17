@@ -35,7 +35,7 @@ A modern and user-friendly web application designed to streamline school operati
 ## 🖼️ Screenshots
 
 ### 🛡️ Admin Panel
-![Admin Panel](images/admin-panel.png)
+![Admin Panel](https://github.com/hetpatel1812/school-monitoring-system/blob/main/school%20monitoring/images/admin-panel.png.png)
 
 ### 🏫 School Panel
 ![School Panel](images/school-panel.png)
