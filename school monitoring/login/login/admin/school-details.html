@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <style>
+        .school-header {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            position: relative;
+            overflow: hidden;
+            height: 400px;
+            display: flex;
+            align-items: flex-end;
+            margin: -2rem -2rem 2rem -2rem;
+        }
+
+        .school-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: var(--header-bg-image);
+            background-size: cover;
+            background-position: center;
+            opacity: 0.6;
+        }
+
+        .school-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 10;
+            padding: 2rem;
+            width: 100%;
+            color: white;
+        }
+
+        .school-logo {
+            width: 120px;
+            height: 120px;
+            border: 4px solid rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            background: white;
+        }
+
+        .school-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .school-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        .info-section:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .back-button {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.75rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .back-button:hover {
+            transform: translateX(-5px);
+            background: white;
+        }
+
+        .facility-icon {
+            transition: all 0.3s ease;
+        }
+
+        .info-section:hover .facility-icon {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Back Button -->
+    <button onclick="window.history.back()" class="back-button text-gray-600 hover:text-gray-800 flex items-center gap-2">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back</span>
+    </button>
+
+    <!-- School Header -->
+    <div class="school-header">
+        <div class="header-content">
+            <div class="flex items-end gap-6">
+                <div class="school-logo">
+                    <img id="schoolLogo" alt="School Logo" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1">
+                    <h1 id="schoolName" class="text-4xl font-bold mb-2 text-white"></h1>
+                    <p id="schoolId" class="text-gray-200 text-lg"></p>
+                    <div class="flex items-center gap-4 mt-4">
+                        <span id="schoolType" class="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg text-white"></span>
+                        <span id="schoolStatus" class="px-4 py-2 rounded-lg text-white"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-8 py-6">
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-blue-100 rounded-full">
+                        <i class="fas fa-user-graduate text-blue-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Students</p>
+                        <h3 id="totalStudents" class="text-2xl font-bold text-gray-800">0</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-green-100 rounded-full">
+                        <i class="fas fa-chalkboard-teacher text-green-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Teachers</p>
+                        <h3 id="totalTeachers" class="text-2xl font-bold text-gray-800">0</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-purple-100 rounded-full">
+                        <i class="fas fa-book-open text-purple-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Classes</p>
+                        <h3 id="totalClasses" class="text-2xl font-bold text-gray-800">0</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-yellow-100 rounded-full">
+                        <i class="fas fa-calendar-check text-yellow-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Registration Date</p>
+                        <h3 id="registrationDate" class="text-2xl font-bold text-gray-800">-</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- School Information -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Contact & Location -->
+            <div class="info-section">
+                <h2 class="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">
+                    <i class="fas fa-location-dot mr-2 text-blue-500"></i>
+                    Contact & Location
+                </h2>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-map-marker-alt text-blue-500 mt-1"></i>
+                        <div>
+                            <p class="text-gray-600 text-sm">Address</p>
+                            <div class="group relative">
+                                <p id="address" class="font-medium text-gray-800 cursor-pointer hover:text-blue-600 transition-colors flex items-center gap-2" onclick="handleLocationClick()">
+                                    <span class="flex-1"></span>
+                                    <i class="fas fa-map-pin text-blue-500 text-sm"></i>
+                                </p>
+                                <div class="absolute -top-2 left-0 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                                    Click to open in Google Maps
+                                </div>
+                            </div>
+                            <p id="coordinates" class="text-sm text-gray-500 mt-1"></p>
+                            <button onclick="handleLocationClick()" class="mt-2 flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors text-sm">
+                                <i class="fas fa-location-arrow"></i>
+                                <span>View in Google Maps</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-phone text-green-500 mt-1"></i>
+                        <div>
+                            <p class="text-gray-600 text-sm">Phone</p>
+                            <p id="phone" class="font-medium text-gray-800"></p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-envelope text-red-500 mt-1"></i>
+                        <div>
+                            <p class="text-gray-600 text-sm">Email</p>
+                            <p id="email" class="font-medium text-gray-800"></p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-globe text-purple-500 mt-1"></i>
+                        <div>
+                            <p class="text-gray-600 text-sm">Website</p>
+                            <p id="website" class="font-medium text-gray-800"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Facilities -->
+            <div class="info-section">
+                <h2 class="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">
+                    <i class="fas fa-building mr-2 text-blue-500"></i>
+                    Facilities
+                </h2>
+                <div id="facilitiesGrid" class="grid grid-cols-2 gap-4">
+                    <!-- Facilities will be dynamically added here -->
+                </div>
+            </div>
+
+            <!-- About & Accreditations -->
+            <div class="info-section col-span-2">
+                <h2 class="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">
+                    <i class="fas fa-info-circle mr-2 text-blue-500"></i>
+                    About & Accreditations
+                </h2>
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">About School</h3>
+                        <p id="aboutSchool" class="text-gray-600"></p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">Accreditations</h3>
+                        <p id="accreditations" class="text-gray-600"></p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">Achievements</h3>
+                        <p id="achievements" class="text-gray-600"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to get URL parameters
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Function to format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Function to handle location click
+        function handleLocationClick() {
+            const address = document.getElementById('address').querySelector('span').textContent;
+            const coordinates = document.getElementById('coordinates').textContent;
+            
+            if (confirm('Would you like to open this location in Google Maps?')) {
+                try {
+                    // If coordinates are available, use them for more precise location
+                    if (coordinates && coordinates !== 'N/A') {
+                        const [lat, lng] = coordinates.split(', ').map(coord => parseFloat(coord.trim()));
+                        if (!isNaN(lat) && !isNaN(lng)) {
+                            window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
+                            return;
+                        }
+                    }
+                    
+                    // Fallback to address-based search if coordinates are not available or invalid
+                    if (address && address !== 'N/A') {
+                        window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`, '_blank');
+                    } else {
+                        alert('No valid location information available.');
+                    }
+                } catch (error) {
+                    console.error('Error opening Google Maps:', error);
+                    alert('There was an error opening Google Maps. Please try again.');
+                }
+            }
+        }
+
+        // Function to load school details
+        function loadSchoolDetails() {
+            const schoolId = getUrlParameter('id');
+            if (!schoolId) {
+                window.location.href = 'admin-dashboard.html';
+                return;
+            }
+
+            // Get schools from localStorage
+            const schools = JSON.parse(localStorage.getItem('schools') || '[]');
+            const school = schools.find(s => s.id === schoolId);
+
+            if (!school) {
+                window.location.href = 'admin-dashboard.html';
+                return;
+            }
+
+            // Update school header background
+            const headerElement = document.querySelector('.school-header');
+            if (school.photo) {
+                headerElement.style.setProperty('--header-bg-image', `url('${school.photo}')`);
+            } else {
+                headerElement.style.setProperty('--header-bg-image', "url('https://www.findmyshala.com/uploads/1525780026_school_108_image_08052018171706.jpg')");
+            }
+
+            // Update school logo
+            const logoElement = document.getElementById('schoolLogo');
+            if (school.logo) {
+                logoElement.src = school.logo;
+            } else {
+                logoElement.src = "https://via.placeholder.com/200?text=" + encodeURIComponent(school.name);
+            }
+
+            // Update basic information
+            document.getElementById('schoolName').textContent = school.name || 'N/A';
+            document.getElementById('schoolId').textContent = `School ID: ${school.id}`;
+            document.getElementById('schoolType').textContent = school.type || 'Not Specified';
+            
+            // Set status with appropriate color
+            const statusElement = document.getElementById('schoolStatus');
+            const statusColor = school.status === 'pending' ? 'bg-yellow-500' : 
+                              school.status === 'approved' ? 'bg-green-500' : 'bg-red-500';
+            statusElement.className = `px-4 py-2 rounded-lg text-white ${statusColor}`;
+            statusElement.textContent = school.status?.toUpperCase() || 'N/A';
+
+            // Update statistics
+            document.getElementById('totalStudents').textContent = school.totalStudents || '0';
+            document.getElementById('totalTeachers').textContent = school.totalTeachers || '0';
+            document.getElementById('totalClasses').textContent = school.totalClasses || '0';
+            document.getElementById('registrationDate').textContent = formatDate(school.registrationDate) || 'N/A';
+
+            // Update contact information with coordinates and address
+            const addressElement = document.getElementById('address').querySelector('span');
+            addressElement.textContent = school.address || 'N/A';
+            
+            if (school.location && school.location.lat && school.location.lng) {
+                document.getElementById('coordinates').textContent = `${school.location.lat}, ${school.location.lng}`;
+            }
+            document.getElementById('phone').textContent = school.phone || 'N/A';
+            document.getElementById('email').textContent = school.email || 'N/A';
+            document.getElementById('website').textContent = school.website || 'N/A';
+
+            // Update facilities
+            const facilitiesGrid = document.getElementById('facilitiesGrid');
+            const facilities = school.facilities || {};
+            const facilityIcons = {
+                swimmingPool: ['swimming-pool', 'Swimming Pool'],
+                scienceLab: ['flask', 'Science Lab'],
+                library: ['book', 'Library'],
+                sportsComplex: ['volleyball-ball', 'Sports Complex'],
+                computerLab: ['desktop', 'Computer Lab'],
+                auditorium: ['theater-masks', 'Auditorium'],
+                cafeteria: ['utensils', 'Cafeteria'],
+                playground: ['futbol', 'Playground'],
+                transportService: ['bus', 'Transport Service'],
+                medicalRoom: ['first-aid', 'Medical Room']
+            };
+
+            Object.entries(facilities).forEach(([facility, hasIt]) => {
+                if (facilityIcons[facility]) {
+                    const [icon, label] = facilityIcons[facility];
+                    const div = document.createElement('div');
+                    div.className = `flex items-center gap-3 ${hasIt ? 'text-green-600' : 'text-gray-400'}`;
+                    div.innerHTML = `
+                        <i class="fas fa-${icon} facility-icon"></i>
+                        <span>${label}</span>
+                        <i class="fas fa-${hasIt ? 'check text-green-500' : 'times text-red-500'} ml-auto"></i>
+                    `;
+                    facilitiesGrid.appendChild(div);
+                }
+            });
+
+            // Update about & accreditations
+            document.getElementById('aboutSchool').textContent = school.about || 'No description available';
+            document.getElementById('accreditations').textContent = school.accreditations || 'No accreditations listed';
+            document.getElementById('achievements').textContent = school.achievements || 'No achievements listed';
+        }
+
+        // Load school details when page loads
+        document.addEventListener('DOMContentLoaded', loadSchoolDetails);
+    </script>
+</body>
+</html> 

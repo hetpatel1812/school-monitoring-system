@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit School Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Inherit base styles from dashboard */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        :root {
+            --light-primary: #ffffff;
+            --light-secondary: #f3f4f6;
+            --light-accent: #667eea;
+            --light-text-primary: #1a1c23;
+            --light-text-secondary: #4a5568;
+            --light-border: #e2e8f0;
+            --accent-purple: #6b4fbb;
+            --accent-blue: #4a5cf5;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar styles (same as dashboard) */
+        .sidebar {
+            width: 250px;
+            background: var(--light-secondary);
+            padding: 20px;
+            border-right: 1px solid var(--light-border);
+        }
+
+        .school-logo {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--light-border);
+        }
+
+        .nav-menu {
+            margin-top: 30px;
+        }
+
+        .nav-item {
+            padding: 15px;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            color: var(--light-text-secondary);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background: var(--light-primary);
+        }
+
+        .edit-form-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid var(--light-border);
+            border-radius: 8px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--accent-purple);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-blue);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--light-text-primary);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--light-border);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .facilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .facility-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .preview-image {
+            max-width: 150px;
+            max-height: 150px;
+            margin-top: 10px;
+            border: 1px solid var(--light-border);
+            border-radius: 4px;
+            display: none;
+        }
+
+        /* Map container styles */
+        .map-container {
+            width: 100%;
+            height: 300px;
+            margin-top: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--light-border);
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .location-search-box {
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .location-search-box input {
+            width: 100%;
+            padding: 10px;
+            padding-right: 40px;
+            border: 1px solid var(--light-border);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--light-text-secondary);
+            cursor: pointer;
+        }
+
+        .coordinates-display {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .coordinates-display input {
+            width: 50%;
+            padding: 8px;
+            border: 1px solid var(--light-border);
+            border-radius: 4px;
+            font-size: 14px;
+            background: #f8f9fa;
+            color: var(--light-text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="school-logo">
+                <h2>School Portal</h2>
+            </div>
+            <div class="nav-menu">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="students.html" class="nav-item">
+                    <i class="fas fa-user-graduate"></i>
+                    <span>Students</span>
+                </a>
+                <a href="teachers.html" class="nav-item">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>Teachers</span>
+                </a>
+                <a href="classes.html" class="nav-item">
+                    <i class="fas fa-book"></i>
+                    <span>Classes</span>
+                </a>
+                <a href="schedule.html" class="nav-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Schedule</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="edit-profile.html" class="nav-item active">
+                    <i class="fas fa-edit"></i>
+                    <span>Edit School Profile</span>
+                </a>
+                <a href="../index.html" class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="edit-form-container">
+                <h1 style="margin-bottom: 30px; color: var(--accent-purple);">Edit School Profile</h1>
+                
+                <form id="schoolProfileForm" onsubmit="return handleSubmit(event)">
+                    <!-- Basic Information -->
+                    <div class="form-section">
+                        <h2 class="section-title">Basic Information</h2>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="schoolId">School ID*</label>
+                                <input type="text" id="schoolId" required readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="schoolName">School Name*</label>
+                                <input type="text" id="schoolName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="schoolType">School Type*</label>
+                                <select id="schoolType" required>
+                                    <option value="">Select Type</option>
+                                    <option value="public">Public School</option>
+                                    <option value="private">Private School</option>
+                                    <option value="international">International School</option>
+                                    <option value="charter">Charter School</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="schoolLogo">School Logo URL</label>
+                                <input type="url" id="schoolLogo">
+                                <img id="logoPreview" class="preview-image">
+                            </div>
+                            <div class="form-group">
+                                <label for="schoolPhoto">School Photo URL</label>
+                                <input type="url" id="schoolPhoto">
+                                <img id="photoPreview" class="preview-image">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="form-section">
+                        <h2 class="section-title">Contact Information</h2>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="address">Address*</label>
+                                <input type="text" id="address" required>
+                                <div class="location-search-box">
+                                    <input type="text" id="locationSearch" placeholder="Search for a location">
+                                    <i class="fas fa-search search-icon" onclick="searchLocation()"></i>
+                                </div>
+                                <div class="map-container">
+                                    <div id="map"></div>
+                                </div>
+                                <div class="coordinates-display">
+                                    <input type="text" id="latitude" placeholder="Latitude" readonly>
+                                    <input type="text" id="longitude" placeholder="Longitude" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number*</label>
+                                <input type="tel" id="phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address*</label>
+                                <input type="email" id="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="website">Website</label>
+                                <input type="url" id="website">
+                            </div>
+                            <div class="form-group">
+                                <label for="directions">Directions</label>
+                                <textarea id="directions" placeholder="Provide landmarks and directions to reach the school"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics -->
+                    <div class="form-section">
+                        <h2 class="section-title">School Statistics</h2>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="totalStudents">Total Students*</label>
+                                <input type="number" id="totalStudents" required min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="totalTeachers">Total Teachers*</label>
+                                <input type="number" id="totalTeachers" required min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="totalClasses">Total Classes*</label>
+                                <input type="number" id="totalClasses" required min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="studentTeacherRatio">Student-Teacher Ratio</label>
+                                <input type="text" id="studentTeacherRatio" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Facilities -->
+                    <div class="form-section">
+                        <h2 class="section-title">Facilities</h2>
+                        <div class="facilities-grid">
+                            <div class="facility-item">
+                                <input type="checkbox" id="swimmingPool">
+                                <label for="swimmingPool">Swimming Pool</label>
+                            </div>
+                            <div class="facility-item">
+                                <input type="checkbox" id="scienceLab">
+                                <label for="scienceLab">Science Lab</label>
+                            </div>
+                            <div class="facility-item">
+                                <input type="checkbox" id="library">
+                                <label for="library">Library</label>
+                            </div>
+                            <div class="facility-item">
+                                <input type="checkbox" id="sportsComplex">
+                                <label for="sportsComplex">Sports Complex</label>
+                            </div>
+                            <div class="facility-item">
+                                <input type="checkbox" id="computerLab">
+                                <label for="computerLab">Computer Lab</label>
+                            </div>
+                            <div class="facility-item">
+                                <input type="checkbox" id="auditorium">
+                                <label for="auditorium">Auditorium</label>
+                            </div>
+                            <div class="facility-item">
+                                <input type="checkbox" id="cafeteria">
+                                <label for="cafeteria">Cafeteria</label>
+                            </div>
+                            <div class="facility-item">
+                                <input type="checkbox" id="playground">
+                                <label for="playground">Playground</label>
+                            </div>
+                            <div class="facility-item">
+                                <input type="checkbox" id="transportService">
+                                <label for="transportService">Transport Service</label>
+                            </div>
+                            <div class="facility-item">
+                                <input type="checkbox" id="medicalRoom">
+                                <label for="medicalRoom">Medical Room</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- About & Accreditations -->
+                    <div class="form-section">
+                        <h2 class="section-title">About & Accreditations</h2>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="aboutSchool">About School*</label>
+                                <textarea id="aboutSchool" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="accreditations">Accreditations</label>
+                                <textarea id="accreditations" placeholder="List all accreditations and certifications"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="achievements">Notable Achievements</label>
+                                <textarea id="achievements" placeholder="List major achievements and awards"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+    <script>
+        let map;
+        let marker;
+        let geocoder;
+        let searchBox;
+
+        function initMap() {
+            // Default coordinates (can be center of your city/region)
+            const defaultLocation = { lat: 23.0225, lng: 72.5714 }; // Ahmedabad coordinates
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: defaultLocation,
+                zoom: 13,
+                styles: [
+                    {
+                        featureType: "poi",
+                        elementType: "labels",
+                        stylers: [{ visibility: "off" }]
+                    }
+                ]
+            });
+
+            geocoder = new google.maps.Geocoder();
+            
+            // Initialize the search box
+            const input = document.getElementById('locationSearch');
+            searchBox = new google.maps.places.SearchBox(input);
+            
+            // Bias the SearchBox results towards current map's viewport
+            map.addListener('bounds_changed', () => {
+                searchBox.setBounds(map.getBounds());
+            });
+
+            // Create initial marker
+            marker = new google.maps.Marker({
+                map: map,
+                draggable: true,
+                position: defaultLocation
+            });
+
+            // Update coordinates when marker is dragged
+            marker.addListener('dragend', () => {
+                const position = marker.getPosition();
+                updateCoordinates(position.lat(), position.lng());
+                reverseGeocode(position);
+            });
+
+            // Listen for location selection
+            searchBox.addListener('places_changed', () => {
+                const places = searchBox.getPlaces();
+                if (places.length === 0) return;
+
+                const place = places[0];
+                if (!place.geometry || !place.geometry.location) return;
+
+                // Update map and marker
+                map.setCenter(place.geometry.location);
+                marker.setPosition(place.geometry.location);
+                updateCoordinates(place.geometry.location.lat(), place.geometry.location.lng());
+                document.getElementById('address').value = place.formatted_address;
+            });
+
+            // Try to get user's current location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        map.setCenter(pos);
+                        marker.setPosition(pos);
+                        updateCoordinates(pos.lat, pos.lng);
+                        reverseGeocode(pos);
+                    },
+                    () => {
+                        // Handle geolocation error
+                        console.log("Error: The Geolocation service failed.");
+                    }
+                );
+            }
+        }
+
+        function searchLocation() {
+            const address = document.getElementById('locationSearch').value;
+            geocoder.geocode({ address: address }, (results, status) => {
+                if (status === 'OK') {
+                    const location = results[0].geometry.location;
+                    map.setCenter(location);
+                    marker.setPosition(location);
+                    updateCoordinates(location.lat(), location.lng());
+                    document.getElementById('address').value = results[0].formatted_address;
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        }
+
+        function reverseGeocode(position) {
+            geocoder.geocode({ location: position }, (results, status) => {
+                if (status === 'OK' && results[0]) {
+                    document.getElementById('address').value = results[0].formatted_address;
+                    document.getElementById('locationSearch').value = results[0].formatted_address;
+                }
+            });
+        }
+
+        function updateCoordinates(lat, lng) {
+            document.getElementById('latitude').value = lat.toFixed(6);
+            document.getElementById('longitude').value = lng.toFixed(6);
+        }
+
+        // Load school data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get school data from localStorage or generate new ID
+            const schoolData = JSON.parse(localStorage.getItem('schoolData') || '{}');
+            const schoolId = schoolData.id || generateSchoolId();
+            
+            // Set the school ID
+            document.getElementById('schoolId').value = schoolId;
+            
+            // Load other school data if available
+            if (schoolData.name) {
+                document.getElementById('schoolName').value = schoolData.name;
+                document.getElementById('schoolType').value = schoolData.type || '';
+                document.getElementById('schoolLogo').value = schoolData.logo || '';
+                document.getElementById('schoolPhoto').value = schoolData.photo || '';
+                document.getElementById('address').value = schoolData.address || '';
+                document.getElementById('phone').value = schoolData.phone || '';
+                document.getElementById('email').value = schoolData.email || '';
+                document.getElementById('website').value = schoolData.website || '';
+                document.getElementById('directions').value = schoolData.directions || '';
+                document.getElementById('totalStudents').value = schoolData.totalStudents || '';
+                document.getElementById('totalTeachers').value = schoolData.totalTeachers || '';
+                document.getElementById('totalClasses').value = schoolData.totalClasses || '';
+                document.getElementById('aboutSchool').value = schoolData.about || '';
+                document.getElementById('accreditations').value = schoolData.accreditations || '';
+                document.getElementById('achievements').value = schoolData.achievements || '';
+                
+                // Set facilities
+                const facilities = schoolData.facilities || {};
+                Object.keys(facilities).forEach(facility => {
+                    const checkbox = document.getElementById(facility);
+                    if (checkbox) {
+                        checkbox.checked = facilities[facility];
+                    }
+                });
+
+                // Update ratio
+                updateRatio();
+            }
+        });
+
+        // Generate a unique school ID
+        function generateSchoolId() {
+            const prefix = 'SCH';
+            const timestamp = Date.now().toString().slice(-6);
+            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            return `${prefix}${timestamp}${random}`;
+        }
+
+        // Preview images when URLs are entered
+        document.getElementById('schoolLogo').addEventListener('input', function(e) {
+            const preview = document.getElementById('logoPreview');
+            preview.style.display = 'block';
+            preview.src = e.target.value;
+        });
+
+        document.getElementById('schoolPhoto').addEventListener('input', function(e) {
+            const preview = document.getElementById('photoPreview');
+            preview.style.display = 'block';
+            preview.src = e.target.value;
+        });
+
+        // Calculate student-teacher ratio automatically
+        function updateRatio() {
+            const students = document.getElementById('totalStudents').value;
+            const teachers = document.getElementById('totalTeachers').value;
+            if (students && teachers && teachers > 0) {
+                const ratio = (students / teachers).toFixed(1);
+                document.getElementById('studentTeacherRatio').value = ratio + ':1';
+            }
+        }
+
+        document.getElementById('totalStudents').addEventListener('input', updateRatio);
+        document.getElementById('totalTeachers').addEventListener('input', updateRatio);
+
+        // Handle form submission
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            const schoolData = {
+                id: document.getElementById('schoolId').value,
+                name: document.getElementById('schoolName').value,
+                type: document.getElementById('schoolType').value,
+                logo: document.getElementById('schoolLogo').value,
+                photo: document.getElementById('schoolPhoto').value,
+                address: document.getElementById('address').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                website: document.getElementById('website').value,
+                directions: document.getElementById('directions').value,
+                totalStudents: document.getElementById('totalStudents').value,
+                totalTeachers: document.getElementById('totalTeachers').value,
+                totalClasses: document.getElementById('totalClasses').value,
+                about: document.getElementById('aboutSchool').value,
+                accreditations: document.getElementById('accreditations').value,
+                achievements: document.getElementById('achievements').value,
+                facilities: {
+                    swimmingPool: document.getElementById('swimmingPool').checked,
+                    scienceLab: document.getElementById('scienceLab').checked,
+                    library: document.getElementById('library').checked,
+                    sportsComplex: document.getElementById('sportsComplex').checked,
+                    computerLab: document.getElementById('computerLab').checked,
+                    auditorium: document.getElementById('auditorium').checked,
+                    cafeteria: document.getElementById('cafeteria').checked,
+                    playground: document.getElementById('playground').checked,
+                    transportService: document.getElementById('transportService').checked,
+                    medicalRoom: document.getElementById('medicalRoom').checked
+                },
+                location: {
+                    lat: parseFloat(document.getElementById('latitude').value),
+                    lng: parseFloat(document.getElementById('longitude').value)
+                }
+            };
+
+            // Save to localStorage
+            localStorage.setItem('schoolData', JSON.stringify(schoolData));
+            
+            // Show success message
+            alert('Profile updated successfully!');
+            return false;
+        }
+
+        // Handle image preview errors
+        function handleImageError(img) {
+            img.style.display = 'none';
+        }
+
+        document.getElementById('logoPreview').addEventListener('error', function() {
+            handleImageError(this);
+        });
+
+        document.getElementById('photoPreview').addEventListener('error', function() {
+            handleImageError(this);
+        });
+
+        // Initialize map when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            initMap();
+            
+            // Load existing coordinates if available
+            const schoolData = JSON.parse(localStorage.getItem('schoolData') || '{}');
+            if (schoolData.location) {
+                const position = {
+                    lat: schoolData.location.lat,
+                    lng: schoolData.location.lng
+                };
+                map.setCenter(position);
+                marker.setPosition(position);
+                updateCoordinates(position.lat, position.lng);
+            }
+        });
+    </script>
+</body>
+</html>
