@@ -20,7 +20,7 @@ A modern and user-friendly web application designed to streamline school operati
 |---------------|-----------------------------------|
 | Frontend      | HTML, CSS, JavaScript             |
 | Backend       | Node.js                           |
-| Database      | MySQL                             |
+| Database      | PLpgSQl                             |
 
 
 ## ✔ Expected Benefits
