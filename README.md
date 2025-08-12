@@ -1,4 +1,4 @@
-#🎓 School Monitoring System
+# 🎓 School Monitoring System
 
 A modern and user-friendly web application designed to streamline school operations by tracking student attendance, academic performance, and facilitating smooth communication between schools.
 
