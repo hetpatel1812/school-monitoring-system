@@ -49,7 +49,6 @@ A modern and user-friendly web application designed to streamline school operati
 ## 📬 Contact
 
 - **Developer**: [Het Patel](https://github.com/hetpatel1812)
-- **Email**: hetp3286@gmail.com
 
 ---
 
