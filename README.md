@@ -11,7 +11,7 @@ A modern and user-friendly web application designed to streamline school operati
 - 🛡️ Admin & School Dashboards
 - 🧾 Real-time Reports & Notifications
 
-
+   
 ---
 
 ## 🛠️ Tech Stack
